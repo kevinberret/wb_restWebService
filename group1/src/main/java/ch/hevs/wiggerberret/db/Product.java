@@ -1,4 +1,4 @@
-package db;
+package ch.hevs.wiggerberret.db;
 
 import java.util.ArrayList;
 
