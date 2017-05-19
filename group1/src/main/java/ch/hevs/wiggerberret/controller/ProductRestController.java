@@ -20,6 +20,11 @@ public class ProductRestController {
 	@Autowired
 	private ProductRepository repo;
 		
+	@RequestMapping(value="/hello",method=RequestMethod.GET)
+	public String hello(){
+		return "hello";
+	}
+	
 	@RequestMapping(method=RequestMethod.GET)
 	public List<Product> getAllProducts() {
 		return repo.findAll();
