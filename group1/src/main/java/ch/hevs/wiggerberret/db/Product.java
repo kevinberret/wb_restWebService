@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Product {
 	
 	@Id
-	private int id;
+	private String id;
 	private String name;
 	private String ingredients;
 	private int quantity;
@@ -18,11 +18,11 @@ public class Product {
 	private String portionUnit;
 	private ArrayList<Nutrient> nutrients;
 	
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 	
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	
