@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.hevs.wiggerberret.db.Product;
@@ -30,18 +31,21 @@ public class ProductRestController {
 		return repo.findAll();
 	}
 	
-	@RequestMapping(method=RequestMethod.GET)
-	public List<Product> getAllProductsSortedByQuantity() {
-		return repo.findAll(new Sort(Sort.Direction.ASC,"quantity"));
+	@RequestMapping(method=RequestMethod.GET, params = {"sort"})
+	public List<Product> getAllProductsSortedByQuantity(@RequestParam(value = "quantity") String quantity) {
+		if(quantity.equals("+quantity"))
+			return repo.findAll(new Sort(Sort.Direction.ASC,"quantity"));
+		else
+			return repo.findAll(new Sort(Sort.Direction.DESC,"quantity"));
 	}
 	
-	@RequestMapping(method=RequestMethod.GET)
-	public List<Product> getAllProductsByName(@PathVariable String name) {
+	@RequestMapping(method=RequestMethod.GET, params = {"name"})
+	public List<Product> getAllProductsByName(@RequestParam(value = "name") String name) {
 		return repo.findByName(name);
 	}
 	
-	@RequestMapping(method=RequestMethod.GET)
-	public List<Product> getAllProductsByNameAndQuantity(@PathVariable String name,@PathVariable int quantity) {
+	@RequestMapping(method=RequestMethod.GET, params = {"name", "quantity"})
+	public List<Product> getAllProductsByNameAndQuantity(@RequestParam(value = "name") String name, @RequestParam(value = "quantity") int quantity) {
 		return repo.findByNameAndQuantity(name, quantity);
 	}
 	  
