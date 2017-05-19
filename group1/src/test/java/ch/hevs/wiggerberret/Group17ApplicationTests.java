@@ -1,4 +1,4 @@
-package ch.hevs.wiggerberret.group1;
+package ch.hevs.wiggerberret;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,7 +7,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class Group1ApplicationTests {
+public class Group17ApplicationTests {
 
 	@Test
 	public void contextLoads() {
