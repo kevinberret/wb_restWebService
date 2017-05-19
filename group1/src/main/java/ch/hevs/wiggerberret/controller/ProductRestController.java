@@ -48,12 +48,12 @@ public class ProductRestController {
 	public List<Product> getAllProductsByNameAndQuantity(@RequestParam(value = "name") String name, @RequestParam(value = "quantity") int quantity) {
 		return repo.findByNameAndQuantity(name, quantity);
 	}
-	  
+	
 	@RequestMapping(method=RequestMethod.POST)
 	public Product create(@RequestBody Product product) {
 		return repo.save(product);
 	}
-	  
+	
 	@RequestMapping(method=RequestMethod.PUT, value="{id}")
 	public Product update(@PathVariable String id, @RequestBody Product product) {
 		Product update = repo.findOne(id);
@@ -68,7 +68,7 @@ public class ProductRestController {
 		
 		return repo.save(update);
 	}
-	  
+	
 	@RequestMapping(method=RequestMethod.DELETE, value="{id}")
 	public void delete(@PathVariable String id) {
 		repo.delete(id);
