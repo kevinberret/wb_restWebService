@@ -1,6 +1,7 @@
 package ch.hevs.wiggerberret;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -17,7 +18,7 @@ public class RestClient {
 		/*
 		 * Simple method to test if REST Client is ok
 		 */
-		getHello();
+		//getHello();
 		
 		/*
 		 * Method to test the creation of a product
@@ -27,20 +28,20 @@ public class RestClient {
 		/*
 		 * Method to test the update of a product
 		 */
-		//put();
+		//put("idProduit");
 		
 		/*
 		 * Method to test the suppression of a product
 		 */
-		//delete();
+		//delete("592448fa3f92691320836eea");
 		
 		/*
 		 * Method to get products (with sort & filter)
 		 */
 		//getAll();
 		//getAllSortQuantity();
-		//getAllByName("name");
-		//getAllByNameQuantity("name",nombre);
+		//getAllByName("Mangue+:+en+tranches");
+		//getAllByNameQuantity("Mangue+:+en+tranches",245);
 		
 	}
 	
@@ -56,7 +57,6 @@ public class RestClient {
 				String answer = null;
 				
 				while((answer = in.readLine()) != null){
-					System.out.println("\nREST Service Invoked Successfully...");
 					System.out.println("\nWebservice says : "+answer);
 				}
 				
@@ -82,7 +82,6 @@ public class RestClient {
 				String answer = null;
 				
 				while((answer = in.readLine()) != null){
-					System.out.println("\nREST Service Invoked Successfully...");
 					System.out.println("\nHere are the webservice's products : "+answer);
 				}
 				
@@ -114,7 +113,6 @@ public class RestClient {
 				String answer = null;
 				
 				while((answer = in.readLine()) != null){
-					System.out.println("\nREST Service Invoked Successfully...");
 					System.out.println("\nHere are the webservice's products sorted by quantity : "+answer);
 				}
 				
@@ -142,7 +140,6 @@ public class RestClient {
 				String answer = null;
 				
 				while((answer = in.readLine()) != null){
-					System.out.println("\nREST Service Invoked Successfully...");
 					System.out.println("\nHere are the webservice's products filtered by name : "+answer);
 				}
 				
@@ -170,7 +167,6 @@ public class RestClient {
 				String answer = null;
 				
 				while((answer = in.readLine()) != null){
-					System.out.println("\nREST Service Invoked Successfully...");
 					System.out.println("\nHere are the webservice's products filtered by name and quantity : "+answer);
 				}
 				
@@ -185,6 +181,43 @@ public class RestClient {
 		}
 	}
 	
+	public static void post(){
+		/*
+		 * Wtf ?
+		 */
+	}
+	
+	public static void put(String idProduct){
+		/*
+		 * Wtf ?
+		 */
+	}
+	
+	public static void delete(String idProduct){
+		try {
+			try {
+				URL url = new URL(URL.concat("/"+idProduct));
+				HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+				connection.setRequestMethod("DELETE");
+				connection.setConnectTimeout(5000);
+				connection.setReadTimeout(5000);
+ 
+				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+ 
+				String response = null;
+				while ((response = in.readLine()) != null) {
+					System.out.println("\nWebservice says : " + response);
+				}
+				System.out.println("\nCrunchify REST Service Invoked Successfully..");
+				in.close();
+			} catch (Exception e) {
+				System.out.println("\nError while calling Crunchify REST Service");
+				System.out.println(e);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 
 }
