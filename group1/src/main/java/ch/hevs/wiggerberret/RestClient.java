@@ -1,6 +1,8 @@
 package ch.hevs.wiggerberret;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -9,9 +11,15 @@ import java.util.Scanner;
 
 import javax.xml.ws.Response;
 
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.data.convert.Jsr310Converters.PeriodToStringConverter;
 
 import ch.hevs.wiggerberret.db.Nutrient;
 
@@ -223,8 +231,7 @@ public class RestClient {
 			
 			while(!(nutrientName = scanString.nextLine()).equals("exit")){
 				// creation d'un objet nutrient
-				JSONObject nutrient = new JSONObject();				
-				
+				JSONObject nutrient = new JSONObject();			
 				
 				// récupération de toutes les valeurs nécessaires
 				System.out.println("Entrez l'unité...");
@@ -265,16 +272,150 @@ public class RestClient {
 			
 			scanString.close();
 			scanFigures.close();
+			
+			// Ajout dans la db de l'élément via le webservice
+			HttpClient httpClient = HttpClientBuilder.create().build(); //Use this instead 
+
+		    HttpPost request = new HttpPost(URL);
+		    StringEntity params =new StringEntity(product.toString(), "UTF-8");
+		    request.addHeader("content-type", "application/json;charset=UTF-8");
+		    request.setEntity(params);
+		    httpClient.execute(request);
 		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
 	public static void put(String idProduct){
-		/*
-		 * Wtf ?
-		 */
+		// Récupération de l'élément souhaité via la méthode get
+		String answer = null;	
+		
+		try{
+			String newURL = URL.concat("/"+idProduct);
+			
+			URL url = new URL(newURL);
+			URLConnection connection = url.openConnection();
+			
+			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			
+			answer = in.readLine();
+			
+			in.close();			
+		} catch (Exception e) {
+			System.out.println("\nError while calling REST Service");
+			System.out.println(e);
+		}
+		
+		if(answer != null){			
+			try {
+				JSONObject product = new JSONObject(answer);
+				
+				// Modification des valeurs si nécessaire
+				Scanner scanString = new Scanner(System.in);
+				Scanner scanFigures = new Scanner(System.in);
+				
+				// récupération de toutes les valeurs nécessaires et update si désiré par user
+				System.out.println("Entrez le nom du produit [" + product.getString("name") + "] (appuyer sur entrée pour conserver la valeur actuelle...)");
+				String name = scanString.nextLine();
+				name = name.length() == 0 ? product.getString("name") : name;
+				
+				System.out.println("Entrez les ingrédients [" + product.getString("ingredients") + "] (appuyer sur entrée pour conserver la valeur actuelle...)");
+				String ingredients = scanString.nextLine();
+				ingredients = ingredients.length() == 0  ? product.getString("ingredients") : ingredients;
+				
+				System.out.println("Entrez la quantité [" + product.getString("quantity") + "] (appuyer sur entrée pour conserver la valeur actuelle...)");
+				int quantity = scanFigures.nextInt();
+				quantity = quantity == 0 ? product.getInt("quantity") : quantity;
+				
+				System.out.println("Entrez l'unité [" + product.getString("unit") + "] (appuyer sur entrée pour conserver la valeur actuelle...)");
+				String unit = scanString.nextLine();
+				unit = unit.length() == 0  ? product.getString("unit") : unit;
+				
+				System.out.println("Entrez la quantité de la portion [" + product.getString("portionQuantity") + "] (appuyer sur entrée pour conserver la valeur actuelle...)");
+				int portionQuantity = scanFigures.nextInt();
+				portionQuantity = portionQuantity == 0 ? product.getInt("portionQuantity") : portionQuantity;
+				
+				System.out.println("Entrez l'unité de la portion [" + product.getString("portionUnit") + "] (appuyer sur entrée pour conserver la valeur actuelle...)");
+				String portionUnit = scanString.nextLine();
+				portionUnit = portionUnit.length() == 0  ? product.getString("portionUnit") : portionUnit;
+				
+				JSONArray nutrientsOld = (JSONArray) product.get("nutrients");
+				JSONArray nutrientsNew = new JSONArray();
+				
+				for (int i = 0; i < nutrientsOld.length(); i++) {
+					// récupération du nutrient
+					JSONObject nutrient = nutrientsOld.getJSONObject(i);
+					
+					// récupération de toutes les valeurs nécessaires
+					System.out.println("Entrez l'unité [" + nutrient.getString("unitNutrient") + "] (appuyer sur entrée pour conserver la valeur actuelle...)");
+					String unitNutrient = scanString.nextLine();
+					unitNutrient = unitNutrient.length() == 0 ? nutrient.getString("unitNutrient") : unitNutrient;
+					
+					System.out.println("Entrez la proportion en %age [" + nutrient.getDouble("perHundred") + "] (appuyer sur entrée pour conserver la valeur actuelle...)");		
+					double perHundred = scanFigures.nextDouble();
+					perHundred = perHundred == 0 ? nutrient.getDouble("perHundred") : perHundred;
+					
+					System.out.println("Entrez la proportion par portion [" + nutrient.getString("perPortion") + "] (appuyer sur entrée pour conserver la valeur actuelle...)");				
+					double perPortion = scanFigures.nextDouble();
+					perPortion = perPortion == 0 ? nutrient.getDouble("perPortion") : perPortion;
+					
+					System.out.println("Entrez la proportion par jour [" + nutrient.getString("perDay") + "] (appuyer sur entrée pour conserver la valeur actuelle...)");
+					int perDay = scanFigures.nextInt();
+					perDay = perDay == 0 ? nutrient.getInt("perDay") : perDay;
+					
+					// ajout de tous les éléments
+					nutrient.put("name", name);
+					nutrient.put("unit", unitNutrient);
+					nutrient.put("perHundred", perHundred);
+					nutrient.put("perPortion", perPortion);
+					nutrient.put("perDay", perDay);
+					
+					// ajout du nutriment dans le tableau de nutrients
+					nutrientsNew.put(nutrient);
+				}			
+				
+				// ajout de tous les éléments
+				product.put("name", name);
+				product.put("ingredients", ingredients);
+				product.put("quantity", quantity);
+				product.put("unit", unit);
+				product.put("portionQuantity", portionQuantity);
+				product.put("portionUnit", portionUnit);
+				product.put("nutrients", nutrientsNew);
+				
+				System.out.println(product.toString());
+				
+				scanString.close();
+				scanFigures.close();
+				
+				// Modification dans la db de l'élément via le webservice
+			    URL url = new URL(URL);
+			    HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
+			    httpCon.setDoOutput(true);
+			    httpCon.setRequestMethod("PUT");
+			    httpCon.setRequestProperty("Content-Type", "application/json");
+			    OutputStreamWriter out = new OutputStreamWriter(httpCon.getOutputStream());
+			    out.write(product.toString());
+			    out.close();
+			    //httpCon.getInputStream();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ClientProtocolException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}		
 	}
 	
 	public static void delete(String idProduct){
