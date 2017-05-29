@@ -4,8 +4,16 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 import javax.xml.ws.Response;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import ch.hevs.wiggerberret.db.Nutrient;
 
 public class RestClient {
 	
@@ -42,7 +50,7 @@ public class RestClient {
 		//getAllSortQuantity();
 		//getAllByName("Mangue+:+en+tranches");
 		//getAllByNameQuantity("Mangue+:+en+tranches",245);
-		
+		post();
 	}
 	
 	public static void getHello(){
@@ -182,9 +190,82 @@ public class RestClient {
 	}
 	
 	public static void post(){
-		/*
-		 * Wtf ?
-		 */
+		JSONObject product = new JSONObject();
+		
+		Scanner scanString = new Scanner(System.in);
+		Scanner scanFigures = new Scanner(System.in);
+		
+		try {
+			// récupération de toutes les valeurs nécessaires
+			System.out.println("Entrez le nom du nouveau produit...");
+			String name = scanString.nextLine();
+			
+			System.out.println("Entrez les ingrédients...");
+			String ingredients = scanString.nextLine();
+			
+			System.out.println("Entrez la quantité...");
+			int quantity = scanFigures.nextInt();
+			
+			System.out.println("Entrez l'unité...");
+			String unit = scanString.nextLine();
+			
+			System.out.println("Entrez la quantité de la portion...");
+			int portionQuantity = scanFigures.nextInt();
+			
+			System.out.println("Entrez l'unité de la portion...");
+			String portionUnit = scanString.nextLine();
+			
+			JSONArray nutrients = new JSONArray();
+			
+			System.out.println("Entrez le nom du nutriment suivant... (exit pour quitter)");
+			
+			String nutrientName;
+			
+			while(!(nutrientName = scanString.nextLine()).equals("exit")){
+				// creation d'un objet nutrient
+				JSONObject nutrient = new JSONObject();				
+				
+				
+				// récupération de toutes les valeurs nécessaires
+				System.out.println("Entrez l'unité...");
+				String unitNutrient = scanString.nextLine();
+				
+				System.out.println("Entrez la proportion en %age...");
+				double perHundred = scanFigures.nextDouble();
+				
+				System.out.println("Entrez la proportion par portion...");
+				double perPortion = scanFigures.nextDouble();
+				
+				System.out.println("Entrez la proportion par jour...");
+				int perDay = scanFigures.nextInt();
+				
+				// ajout de tous les éléments
+				nutrient.put("name", nutrientName);
+				nutrient.put("unit", unitNutrient);
+				nutrient.put("perHundred", perHundred);
+				nutrient.put("perPortion", perPortion);
+				nutrient.put("perDay", perDay);
+				
+				// ajout du nutriment dans le tableau de nutrients
+				nutrients.put(nutrient);
+				
+				System.out.println("Entrez le nom du nutriment suivant... (exit pour quitter)");
+			}
+			
+			// ajout de tous les éléments
+			product.put("name", name);
+			product.put("ingredients", ingredients);
+			product.put("quantity", quantity);
+			product.put("unit", unit);
+			product.put("portionQuantity", portionQuantity);
+			product.put("portionUnit", portionUnit);
+			product.put("nutrients", nutrients);
+			
+			System.out.println(product.toString());
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public static void put(String idProduct){
