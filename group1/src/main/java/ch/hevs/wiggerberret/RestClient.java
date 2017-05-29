@@ -262,6 +262,9 @@ public class RestClient {
 			product.put("nutrients", nutrients);
 			
 			System.out.println(product.toString());
+			
+			scanString.close();
+			scanFigures.close();
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
