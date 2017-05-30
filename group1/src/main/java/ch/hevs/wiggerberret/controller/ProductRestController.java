@@ -26,6 +26,11 @@ public class ProductRestController {
 		return "hello";
 	}
 	
+	@RequestMapping(method=RequestMethod.GET, value="{id}")
+	public Product get(@PathVariable String id) {
+		return repo.findOne(id);
+	}
+	
 	@RequestMapping(method=RequestMethod.GET)
 	public List<Product> getAllProducts() {
 		return repo.findAll();
