@@ -26,45 +26,38 @@ import ch.hevs.wiggerberret.db.Nutrient;
 public class RestClient {
 	
 	private static final String URL = "http://localhost:8080/products";
-	private static boolean sortASC = true;
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+
+		getHello();
 		
-		/*
-		 * Simple method to test if REST Client is ok
-		 */
-		//getHello();
-		
-		/*
-		 * Method to test the creation of a product
-		 */
-		//post();
-		
-		/*
-		 * Method to test the update of a product
-		 */
-		//put("idProduit");
-		
-		/*
-		 * Method to test the suppression of a product
-		 */
-		//delete("592448fa3f92691320836eea");
-		
-		/*
-		 * Method to get products (with sort & filter)
-		 */
 		//getAll();
 		//getAllSortQuantity();
-		//getAllByName("Mangue+en+tranches+2");
-		//getAllByNameQuantity("Mangue+:+en+tranches",245);
+		//getAllByName();
+		//getAllByNameQuantity();
+		
+
 		//post();
-		put("592d4a4613501e0d20902e16");
+		
+
+		//put();
+		
+
+		//delete();
+		
+		
+		
 	}
 	
+	/*
+	 * Simple méthode pour tester si le Webservice fonctionne
+	 */
 	public static void getHello(){
+		System.out.print("GET HELLO METHOD\n******************");
 		try{
 			try{
+				//Ajoute /hello pour accéder à la méthode du REST Controller
 				String newURL = URL.concat("/hello");
 				URL url = new URL(newURL);
 				URLConnection connection = url.openConnection();
@@ -73,8 +66,9 @@ public class RestClient {
 				
 				String answer = null;
 				
+				//Affiche la réponse de la méthode appelée
 				while((answer = in.readLine()) != null){
-					System.out.println("\nWebservice says : "+answer);
+					System.out.println("\nWebservice dit : "+answer);
 				}
 				
 				in.close();
@@ -88,7 +82,11 @@ public class RestClient {
 		}
 	}
 	
+	/*
+	 * Méthode qui affiche tous les produits
+	 */
 	public static void getAll(){
+		System.out.print("\nGET ALL METHOD\n******************");
 		try{
 			try{
 				URL url = new URL(URL);
@@ -98,6 +96,7 @@ public class RestClient {
 				
 				String answer = null;
 				
+				//Liste tous les produits
 				while((answer = in.readLine()) != null){
 					System.out.println("\nHere are the webservice's products : "+answer);
 				}
@@ -113,10 +112,28 @@ public class RestClient {
 		}
 	}
 	
+	/*
+	 * Méthode qui affiche tous les produits triés selon la quantité (croissant ou non)
+	 */
 	public static void getAllSortQuantity(){
+		System.out.print("\nGET ALL SORT BY QUANTITY METHOD\n*************************");
+		
+		Scanner sortType = new Scanner(System.in);
+		String newURL;
+		boolean sortASC;
+		
 		try{
 			try{
-				String newURL;
+
+				//Demande à l'utilisateur s'il veut par ordre croissant ou non
+				System.out.println("\nSouhaitez-vous le tri par ordre croissant ? (oui / non)");
+				String sort = sortType.nextLine();
+				
+				if(sort.equals("oui"))
+					sortASC = true;
+				else
+					sortASC = false;
+				
 				if(sortASC)
 					newURL = URL.concat("?sort=%2Bquantity");
 				else
@@ -144,9 +161,23 @@ public class RestClient {
 		}
 	}
 	
-	public static void getAllByName(String name){
+	/*
+	 * Recherche un produit par nom
+	 */
+	public static void getAllByName(){
+		System.out.print("\nGET ALL BY NAME METHOD\n*************************");
+		Scanner productName = new Scanner(System.in);
+		
 		try{
 			try{
+				
+				//Demande au user le nom du produit recherché
+				System.out.println("\nEntrez le nom du produit recherché ...");
+				String name = productName.nextLine();
+				
+				//On enlève les espaces et on les remplace par des + pour l'URL
+				name = name.replaceAll("\\s", "+");
+				
 				String newURL = URL.concat("?name="+name);
 				
 				URL url = new URL(newURL);
@@ -157,13 +188,13 @@ public class RestClient {
 				String answer = null;
 				
 				while((answer = in.readLine()) != null){
-					System.out.println("\nHere are the webservice's products filtered by name : "+answer);
+					System.out.println("\nVoici le produit recherché par nom : "+answer);
 				}
 				
 				in.close();
 				
 			} catch (Exception e) {
-				System.out.println("\nError while calling REST Service");
+				System.out.println("\nError while calling REST Webservice...");
 				System.out.println(e);
 			}
 		} catch (Exception e) {
@@ -171,9 +202,26 @@ public class RestClient {
 		}
 	}
 	
-	public static void getAllByNameQuantity(String name, int quantity){
+	/*
+	 * Recherche un produit par nom et quantité
+	 */
+	public static void getAllByNameQuantity(){
+		System.out.print("\nGET ALL BY NAME & QUANTITY METHOD\n*********************************");
 		try{
 			try{
+				Scanner productName = new Scanner(System.in);
+				Scanner productQuantity = new Scanner(System.in);
+				
+				//On demande le nom du produit
+				System.out.println("\nEntrez le nom du produit recherché ...");
+				String name = productName.nextLine();
+				
+				//On retire les espaces en remplaçant par des +
+				name = name.replaceAll("\\s", "+");
+				
+				System.out.println("\nEntrez la quantité du produit ...");
+				int quantity = productQuantity.nextInt();
+				
 				String newURL = URL.concat("?name="+name+"&quantity="+quantity);
 				
 				URL url = new URL(newURL);
@@ -184,7 +232,7 @@ public class RestClient {
 				String answer = null;
 				
 				while((answer = in.readLine()) != null){
-					System.out.println("\nHere are the webservice's products filtered by name and quantity : "+answer);
+					System.out.println("\nVoici le produit recherché par nom et quantité : "+answer);
 				}
 				
 				in.close();
@@ -198,7 +246,11 @@ public class RestClient {
 		}
 	}
 	
+	/*
+	 * Crée un nouveau produit
+	 */
 	public static void post(){
+		System.out.print("\nPOST METHOD\n*************");
 		JSONObject product = new JSONObject();
 		
 		Scanner scanString = new Scanner(System.in);
@@ -206,7 +258,7 @@ public class RestClient {
 		
 		try {
 			// récupération de toutes les valeurs nécessaires
-			System.out.println("Entrez le nom du nouveau produit...");
+			System.out.println("\nEntrez le nom du nouveau produit...");
 			String name = scanString.nextLine();
 			
 			System.out.println("Entrez les ingrédients...");
@@ -294,11 +346,21 @@ public class RestClient {
 		}
 	}
 	
-	public static void put(String idProduct){
+	/*
+	 * Met à jour un produit existant
+	 */
+	public static void put(){
+		System.out.print("\nPUT METHOD\n**********");
+		
 		// Récupération de l'élément souhaité via la méthode get
 		String answer = null;	
 		
+		Scanner productId = new Scanner(System.in);
+		System.out.println("\nEntrez l'id du produit que vous souhaitez mettre à jour ...");
+		String idProduct = productId.nextLine();
+		
 		try{
+			
 			URL url = new URL(URL.concat("/"+idProduct));
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
@@ -417,15 +479,7 @@ public class RestClient {
 			    OutputStreamWriter out = new OutputStreamWriter(httpCon.getOutputStream());
 			    out.write(product.toString());
 			    out.close();
-			    
-			    BufferedReader in = new BufferedReader(new InputStreamReader(httpCon.getInputStream()));
-			    
-				String response = null;
-				while ((response = in.readLine()) != null) {
-					System.out.println("\nWebservice says : " + response);
-				}
-				System.out.println("\nUpdate REST Service Invoked Successfully..");
-				in.close();
+
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -439,7 +493,17 @@ public class RestClient {
 		}		
 	}
 	
-	public static void delete(String idProduct){
+	/*
+	 * Supprime un produit
+	 */
+	public static void delete(){
+		System.out.print("\nDELETE METHOD\n*************");
+		
+		Scanner productId = new Scanner(System.in);
+		System.out.println("\nEntrez l'id du produit que vous souhaitez supprimer ...");
+		String idProduct = productId.nextLine();
+		
+		
 		try {
 			try {
 				URL url = new URL(URL.concat("/"+idProduct));
@@ -452,9 +516,9 @@ public class RestClient {
  
 				String response = null;
 				while ((response = in.readLine()) != null) {
-					System.out.println("\nWebservice says : " + response);
+					System.out.println("\nWebservice dit : " + response);
 				}
-				System.out.println("\nCrunchify REST Service Invoked Successfully..");
+				System.out.println("\nProgramme terminé.");
 				in.close();
 			} catch (Exception e) {
 				System.out.println("\nError while calling Crunchify REST Service");
