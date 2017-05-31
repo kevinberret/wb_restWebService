@@ -30,29 +30,37 @@ public class RestClient {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
+		/*
+		 * GET METHODS
+		 */
 		getHello();
-		
 		//getAll();
 		//getAllSortQuantity();
 		//getAllByName();
 		//getAllByNameQuantity();
 		
-
+		
+		/*
+		 * POST METHOD (CREATION)
+		 */
 		//post();
 		
-
+		
+		
+		/*
+		 * PUT METHOD (UPDATE)
+		 */
 		//put();
 		
 
+		
+		/*
+		 * DELETE METHOD
+		 */
 		//delete();
-		
-		
 		
 	}
 	
-	/*
-	 * Simple méthode pour tester si le Webservice fonctionne
-	 */
 	public static void getHello(){
 		System.out.print("GET HELLO METHOD\n******************");
 		try{
@@ -82,9 +90,6 @@ public class RestClient {
 		}
 	}
 	
-	/*
-	 * Méthode qui affiche tous les produits
-	 */
 	public static void getAll(){
 		System.out.print("\nGET ALL METHOD\n******************");
 		try{
@@ -112,9 +117,6 @@ public class RestClient {
 		}
 	}
 	
-	/*
-	 * Méthode qui affiche tous les produits triés selon la quantité (croissant ou non)
-	 */
 	public static void getAllSortQuantity(){
 		System.out.print("\nGET ALL SORT BY QUANTITY METHOD\n*************************");
 		
@@ -161,9 +163,6 @@ public class RestClient {
 		}
 	}
 	
-	/*
-	 * Recherche un produit par nom
-	 */
 	public static void getAllByName(){
 		System.out.print("\nGET ALL BY NAME METHOD\n*************************");
 		Scanner productName = new Scanner(System.in);
@@ -201,10 +200,7 @@ public class RestClient {
 			e.printStackTrace();
 		}
 	}
-	
-	/*
-	 * Recherche un produit par nom et quantité
-	 */
+
 	public static void getAllByNameQuantity(){
 		System.out.print("\nGET ALL BY NAME & QUANTITY METHOD\n*********************************");
 		try{
@@ -245,10 +241,7 @@ public class RestClient {
 			e.printStackTrace();
 		}
 	}
-	
-	/*
-	 * Crée un nouveau produit
-	 */
+
 	public static void post(){
 		System.out.print("\nPOST METHOD\n*************");
 		JSONObject product = new JSONObject();
@@ -345,10 +338,7 @@ public class RestClient {
 			e.printStackTrace();
 		}
 	}
-	
-	/*
-	 * Met à jour un produit existant
-	 */
+
 	public static void put(){
 		System.out.print("\nPUT METHOD\n**********");
 		
@@ -492,10 +482,7 @@ public class RestClient {
 			}
 		}		
 	}
-	
-	/*
-	 * Supprime un produit
-	 */
+
 	public static void delete(){
 		System.out.print("\nDELETE METHOD\n*************");
 		

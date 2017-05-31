@@ -3,6 +3,10 @@ package ch.hevs.wiggerberret.db;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+/*
+ * Nutrient class object
+ */
+
 @Document
 public class Nutrient {
 	
