@@ -44,7 +44,7 @@ public class ProductRestController {
 	}
 	
 	//Get All Products Sorted by Quantity
-	@RequestMapping(method=RequestMethod.GET, params = {"sort"})
+	@RequestMapping(method=RequestMethod.GET, params = {"quantity"})
 	public List<Product> getAllProductsSortedByQuantity(@RequestParam(value = "quantity") String quantity) {
 		if(quantity.equals("+quantity"))
 			return repo.findAll(new Sort(Sort.Direction.ASC,"quantity"));

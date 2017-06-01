@@ -35,8 +35,8 @@ public class RestClient {
 		 */
 		//getHello();
 		//getAll();
-		//getAllSortQuantity();
-		getAllByName();
+		getAllSortQuantity();
+		//getAllByName();
 		//getAllByNameQuantity();
 		
 		
@@ -50,7 +50,7 @@ public class RestClient {
 		/*
 		 * PUT METHOD (UPDATE)
 		 */
-		put();
+		//put();
 		
 
 		
@@ -131,9 +131,9 @@ public class RestClient {
 				String sort = sortType.nextLine();
 				
 				if(sort.equals("oui"))
-					newURL = URL.concat("?sort=%2Bquantity");
+					newURL = URL.concat("?quantity=%2Bquantity");
 				else
-					newURL = URL.concat("?sort=%2Dquantity");				
+					newURL = URL.concat("?quantity=%2Dquantity");				
 				
 				URL url = new URL(newURL);
 				URLConnection connection = url.openConnection();
