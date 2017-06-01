@@ -36,14 +36,14 @@ public class RestClient {
 		getHello();
 		//getAll();
 		//getAllSortQuantity();
-		//getAllByName();
+		getAllByName();
 		//getAllByNameQuantity();
 		
 		
 		/*
 		 * POST METHOD (CREATION)
 		 */
-		//post();
+		post();
 		
 		
 		
