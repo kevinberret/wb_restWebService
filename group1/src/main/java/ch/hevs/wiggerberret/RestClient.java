@@ -33,7 +33,7 @@ public class RestClient {
 		/*
 		 * GET METHODS
 		 */
-		getHello();
+		//getHello();
 		//getAll();
 		//getAllSortQuantity();
 		getAllByName();
@@ -43,14 +43,14 @@ public class RestClient {
 		/*
 		 * POST METHOD (CREATION)
 		 */
-		post();
+		//post();
 		
 		
 		
 		/*
 		 * PUT METHOD (UPDATE)
 		 */
-		//put();
+		put();
 		
 
 		
@@ -82,7 +82,7 @@ public class RestClient {
 				in.close();
 				
 			} catch (Exception e) {
-				System.out.println("\nError while calling REST Service");
+				System.out.println("\nIl y a eu une erreur lors de l'appel du webservice");
 				System.out.println(e);
 			}
 		} catch (Exception e) {
@@ -102,14 +102,15 @@ public class RestClient {
 				String answer = null;
 				
 				//Liste tous les produits
+				System.out.println("\nVoici les produits dans le webservice : ");
 				while((answer = in.readLine()) != null){
-					System.out.println("\nHere are the webservice's products : "+answer);
+					System.out.println(answer);
 				}
 				
 				in.close();
 				
 			} catch (Exception e) {
-				System.out.println("\nError while calling REST Service");
+				System.out.println("\nIl y a eu une erreur lors de l'appel du webservice");
 				System.out.println(e);
 			}
 		} catch (Exception e) {
@@ -122,24 +123,17 @@ public class RestClient {
 		
 		Scanner sortType = new Scanner(System.in);
 		String newURL;
-		boolean sortASC;
 		
 		try{
 			try{
-
 				//Demande à l'utilisateur s'il veut par ordre croissant ou non
 				System.out.println("\nSouhaitez-vous le tri par ordre croissant ? (oui / non)");
 				String sort = sortType.nextLine();
 				
 				if(sort.equals("oui"))
-					sortASC = true;
-				else
-					sortASC = false;
-				
-				if(sortASC)
 					newURL = URL.concat("?sort=%2Bquantity");
 				else
-					newURL = URL.concat("?sort=%2Dquantity");
+					newURL = URL.concat("?sort=%2Dquantity");				
 				
 				URL url = new URL(newURL);
 				URLConnection connection = url.openConnection();
@@ -148,14 +142,15 @@ public class RestClient {
 				
 				String answer = null;
 				
+				System.out.println("Voici les produits triés par quantité : ");
 				while((answer = in.readLine()) != null){
-					System.out.println("\nHere are the webservice's products sorted by quantity : "+answer);
+					System.out.println(answer);
 				}
 				
 				in.close();
 				
 			} catch (Exception e) {
-				System.out.println("\nError while calling REST Service");
+				System.out.println("\nIl y a eu une erreur lors de l'appel du webservice");
 				System.out.println(e);
 			}
 		} catch (Exception e) {
@@ -193,7 +188,7 @@ public class RestClient {
 				in.close();
 				
 			} catch (Exception e) {
-				System.out.println("\nError while calling REST Webservice...");
+				System.out.println("\nIl y a eu une erreur lors de l'appel du webservice");
 				System.out.println(e);
 			}
 		} catch (Exception e) {
@@ -234,7 +229,7 @@ public class RestClient {
 				in.close();
 				
 			} catch (Exception e) {
-				System.out.println("\nError while calling REST Service");
+				System.out.println("\nIl y a eu une erreur lors de l'appel du webservice");
 				System.out.println(e);
 			}
 		} catch (Exception e) {
@@ -364,7 +359,7 @@ public class RestClient {
 			
 			in.close();			
 		} catch (Exception e) {
-			System.out.println("\nError while calling REST Service");
+			System.out.println("\nIl y a eu une erreur lors de l'appel du webservice");
 			System.out.println(e);
 		}
 		
@@ -374,6 +369,7 @@ public class RestClient {
 				
 				// Modification des valeurs si nécessaire
 				Scanner scanString = new Scanner(System.in);
+				Scanner scanFigures = new Scanner(System.in);
 				
 				String tmp = new String();
 				
@@ -400,41 +396,82 @@ public class RestClient {
 				tmp = scanString.nextLine();
 				portionQuantity = tmp.length() == 0 ? product.getInt("portionQuantity") : Integer.parseInt(tmp);
 				
-				System.out.println("Entrez l'unité de la portion [" + product.getString("portionUnit") + "] (appuyer sur entrée pour conserver la valeur actuelle...)");
+				if(product.has("portionUnit") && !product.isNull("portionUnit"))
+					System.out.println("Entrez l'unité de la portion [" + product.getString("portionUnit") + "] (appuyer sur entrée pour conserver la valeur actuelle...)");
+				else
+					System.out.println("Entrez l'unité de la portion...");
 				String portionUnit = scanString.nextLine();
-				portionUnit = portionUnit.length() == 0  ? product.getString("portionUnit") : portionUnit;
+				if(product.has("portionUnit") && !product.isNull("portionUnit"))
+					portionUnit = portionUnit.length() == 0  ? product.getString("portionUnit") : portionUnit;
 				
 				JSONArray nutrientsOld = (JSONArray) product.get("nutrients");
 				JSONArray nutrientsNew = new JSONArray();
 				
-				System.out.println("Au tour des nutrients!");
-				for (int i = 0; i < nutrientsOld.length(); i++) {
+				System.out.println("Au tour des nutriments!");
+				int j = 0;
+				int sizeNutrientsOld = nutrientsOld.length();
+				
+				if(sizeNutrientsOld > 0){
+					for (int i = 0; i < nutrientsOld.length(); i++) {
+						// récupération du nutrient
+						JSONObject nutrient = nutrientsOld.getJSONObject(i);
+						
+						// récupération de toutes les valeurs nécessaires
+						System.out.println("Entrez le nom du nutrient " + (i+1) + " [" + nutrient.getString("name") + "] (appuyer sur entrée pour conserver la valeur actuelle...)");
+						String nameNutrient = scanString.nextLine();
+						nameNutrient = nameNutrient.length() == 0 ? nutrient.getString("name") : nameNutrient;
+						
+						System.out.println("Entrez l'unité [" + nutrient.getString("unit") + "] (appuyer sur entrée pour conserver la valeur actuelle...)");
+						String unitNutrient = scanString.nextLine();
+						unitNutrient = unitNutrient.length() == 0 ? nutrient.getString("unit") : unitNutrient;
+						
+						System.out.println("Entrez la proportion en %age [" + nutrient.getDouble("perHundred") + "] (appuyer sur entrée pour conserver la valeur actuelle...)");		
+						double perHundred = 0;
+						tmp = scanString.nextLine();
+						perHundred = tmp.length() == 0 ? nutrient.getDouble("perHundred") : Double.parseDouble(tmp);
+						
+						System.out.println("Entrez la proportion par portion [" + nutrient.getDouble("perPortion") + "] (appuyer sur entrée pour conserver la valeur actuelle...)");				
+						double perPortion = 0;
+						tmp = scanString.nextLine();
+						perPortion = tmp.length() == 0 ? nutrient.getDouble("perPortion") : Double.parseDouble(tmp);
+						
+						System.out.println("Entrez la proportion par jour [" + nutrient.getInt("perDay") + "] (appuyer sur entrée pour conserver la valeur actuelle...)");
+						int perDay = 0;
+						tmp = scanString.nextLine();
+						perDay = tmp.length() == 0 ? nutrient.getInt("perDay") : Integer.parseInt(tmp);
+						
+						// ajout de tous les éléments
+						nutrient.put("name", nameNutrient);
+						nutrient.put("unit", unitNutrient);
+						nutrient.put("perHundred", perHundred);
+						nutrient.put("perPortion", perPortion);
+						nutrient.put("perDay", perDay);
+						
+						// ajout du nutriment dans le tableau de nutrients
+						nutrientsNew.put(nutrient);
+					}
+				}
+					
+				System.out.println("Ajoutons des nutriments! Si vous ne voulez pas en ajouter maintenant, écrivez'exit' et appuyer sur enter, si vous ne voulez pas en ajouter, appuyez sur le bouton enter");
+				while(!scanString.nextLine().equals("exit")){
 					// récupération du nutrient
-					JSONObject nutrient = nutrientsOld.getJSONObject(i);
+					JSONObject nutrient = new JSONObject();
 					
 					// récupération de toutes les valeurs nécessaires
-					System.out.println("Entrez le nom du nutrient " + (i+1) + " [" + nutrient.getString("name") + "] (appuyer sur entrée pour conserver la valeur actuelle...)");
+					System.out.println("Entrez le nom du nutrient...");
 					String nameNutrient = scanString.nextLine();
-					nameNutrient = nameNutrient.length() == 0 ? nutrient.getString("name") : nameNutrient;
 					
-					System.out.println("Entrez l'unité [" + nutrient.getString("unit") + "] (appuyer sur entrée pour conserver la valeur actuelle...)");
+					System.out.println("Entrez l'unité...");
 					String unitNutrient = scanString.nextLine();
-					unitNutrient = unitNutrient.length() == 0 ? nutrient.getString("unit") : unitNutrient;
 					
-					System.out.println("Entrez la proportion en %age [" + nutrient.getDouble("perHundred") + "] (appuyer sur entrée pour conserver la valeur actuelle...)");		
-					double perHundred = 0;
-					tmp = scanString.nextLine();
-					perHundred = tmp.length() == 0 ? nutrient.getDouble("perHundred") : Double.parseDouble(tmp);
+					System.out.println("Entrez la proportion en %age...");		
+					double perHundred = scanFigures.nextDouble();
 					
-					System.out.println("Entrez la proportion par portion [" + nutrient.getDouble("perPortion") + "] (appuyer sur entrée pour conserver la valeur actuelle...)");				
-					double perPortion = 0;
-					tmp = scanString.nextLine();
-					perPortion = tmp.length() == 0 ? nutrient.getDouble("perPortion") : Double.parseDouble(tmp);
+					System.out.println("Entrez la proportion par portion...");				
+					double perPortion = scanFigures.nextDouble();
 					
-					System.out.println("Entrez la proportion par jour [" + nutrient.getInt("perDay") + "] (appuyer sur entrée pour conserver la valeur actuelle...)");
-					int perDay = 0;
-					tmp = scanString.nextLine();
-					perDay = tmp.length() == 0 ? nutrient.getInt("perDay") : Integer.parseInt(tmp);
+					System.out.println("Entrez la proportion par jour...");
+					int perDay = (int) scanFigures.nextDouble();
 					
 					// ajout de tous les éléments
 					nutrient.put("name", nameNutrient);
@@ -445,7 +482,9 @@ public class RestClient {
 					
 					// ajout du nutriment dans le tableau de nutrients
 					nutrientsNew.put(nutrient);
-				}			
+					
+					System.out.println(" Si vous ne voulez pas en ajouter maintenant, écrivez'exit' et appuyer sur enter, si vous ne voulez pas en ajouter, appuyez sur le bouton enter");
+				}
 				
 				// ajout de tous les éléments
 				product.put("name", name);
@@ -469,7 +508,7 @@ public class RestClient {
 			    OutputStreamWriter out = new OutputStreamWriter(httpCon.getOutputStream());
 			    out.write(product.toString());
 			    out.close();
-
+		    	httpCon.getInputStream();
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -508,7 +547,7 @@ public class RestClient {
 				System.out.println("\nProgramme terminé.");
 				in.close();
 			} catch (Exception e) {
-				System.out.println("\nError while calling Crunchify REST Service");
+				System.out.println("\nIl y a eu une erreur lors de l'appel du webservice");
 				System.out.println(e);
 			}
 		} catch (Exception e) {
