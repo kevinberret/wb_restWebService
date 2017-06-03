@@ -89,6 +89,7 @@ public class ProductRestController {
 	//Delete an existing product
 	@RequestMapping(method=RequestMethod.DELETE, value="{id}")
 	public void delete(@PathVariable String id) {
-		repo.delete(id);
+		Product deletion = repo.findOne(id);
+		repo.delete(deletion);
 	}
 }
