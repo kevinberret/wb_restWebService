@@ -52,15 +52,15 @@ public class ProductRestController {
 			return repo.findAll(new Sort(Sort.Direction.DESC,"quantity"));
 	}
 	
-	//Get All Products by Name
+	//Get Product by Name
 	@RequestMapping(method=RequestMethod.GET, params = {"name"})
-	public List<Product> getAllProductsByName(@RequestParam(value = "name") String name) {
+	public List<Product> getProductByName(@RequestParam(value = "name") String name) {
 		return repo.findByName(name);
 	}
 	
-	//Get All Products by Name and Quantity
+	//Get Product by Name and Quantity
 	@RequestMapping(method=RequestMethod.GET, params = {"name", "quantity"})
-	public List<Product> getAllProductsByNameAndQuantity(@RequestParam(value = "name") String name, @RequestParam(value = "quantity") int quantity) {
+	public List<Product> getProductByNameAndQuantity(@RequestParam(value = "name") String name, @RequestParam(value = "quantity") int quantity) {
 		return repo.findByNameAndQuantity(name, quantity);
 	}
 	
