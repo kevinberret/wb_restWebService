@@ -44,7 +44,7 @@ public class ProductRestController {
 	}
 	
 	//Get All Products Sorted by Quantity
-	@RequestMapping(method=RequestMethod.GET, params = {"sort"})
+	@RequestMapping(method=RequestMethod.GET, params = {"quantity"})
 	public List<Product> getAllProductsSortedByQuantity(@RequestParam(value = "quantity") String quantity) {
 		if(quantity.equals("+quantity"))
 			return repo.findAll(new Sort(Sort.Direction.ASC,"quantity"));
@@ -52,15 +52,15 @@ public class ProductRestController {
 			return repo.findAll(new Sort(Sort.Direction.DESC,"quantity"));
 	}
 	
-	//Get All Products by Name
+	//Get Product by Name
 	@RequestMapping(method=RequestMethod.GET, params = {"name"})
-	public List<Product> getAllProductsByName(@RequestParam(value = "name") String name) {
+	public List<Product> getProductByName(@RequestParam(value = "name") String name) {
 		return repo.findByName(name);
 	}
 	
-	//Get All Products by Name and Quantity
+	//Get Product by Name and Quantity
 	@RequestMapping(method=RequestMethod.GET, params = {"name", "quantity"})
-	public List<Product> getAllProductsByNameAndQuantity(@RequestParam(value = "name") String name, @RequestParam(value = "quantity") int quantity) {
+	public List<Product> getProductByNameAndQuantity(@RequestParam(value = "name") String name, @RequestParam(value = "quantity") int quantity) {
 		return repo.findByNameAndQuantity(name, quantity);
 	}
 	
@@ -89,6 +89,7 @@ public class ProductRestController {
 	//Delete an existing product
 	@RequestMapping(method=RequestMethod.DELETE, value="{id}")
 	public void delete(@PathVariable String id) {
-		repo.delete(id);
+		Product deletion = repo.findOne(id);
+		repo.delete(deletion);
 	}
 }
