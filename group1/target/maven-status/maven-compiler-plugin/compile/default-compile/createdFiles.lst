@@ -1,0 +1,5 @@
+ch\hevs\wiggerberret\Group17Application.class
+ch\hevs\wiggerberret\controller\ProductRestController.class
+ch\hevs\wiggerberret\db\Nutrient.class
+ch\hevs\wiggerberret\db\Product.class
+ch\hevs\wiggerberret\db\ProductRepository.class
